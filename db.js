@@ -44,6 +44,7 @@ const schema = buildSchema(`
      }
      type Query{
          accounts:[Account]
+         accountOne(id: ID!):[Account]
      }
     `)
     //模拟 数据库
@@ -54,6 +55,31 @@ const root = {
         // 因为是 异步 操作，所以 使用 promise【正常应该return data，但是 使用promise时，return promise】 再resolve data
         return new Promise((resolve, reject) => {
                 connection.query('select name,age,sex,department from account', (err, results) => {
+                        if (err) {
+                            console.log('出错了' + err.message);
+                            return;
+                        }
+                        const arr = [];
+                        for (let i = 0; i < results.length; i++) {
+                            arr.push({
+                                name: results[i].name,
+                                sex: results[i].sex,
+                                age: results[i].age,
+                                department: results[i].department,
+                            });
+                        }
+                        resolve(arr);
+                    }
+
+                );
+            }
+
+        );
+    },
+    accountOne({ id }) { //where name= ?', [data, id]
+        // 因为是 异步 操作，所以 使用 promise【正常应该return data，但是 使用promise时，return promise】 再resolve data
+        return new Promise((resolve, reject) => {
+                connection.query('select name,age,sex,department from account where name= ?', [id], (err, results) => {
                         if (err) {
                             console.log('出错了' + err.message);
                             return;
