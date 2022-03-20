@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <button onclick="getData()">获取数据</button>
+</body>
+<script>
+    function getData() {
+        const query = `
+        query Account($userName: String, $city: String){
+            account(userName: $userName){
+                name
+   
+                department
+                salary(city: $city)
+            }
+        }   
+        `;
+        //查询 时需要 传递的参数
+        const variables = {
+            userName: "李大思",
+            city: "长春"
+        };
+        // 通过 fetch 获取 数据，转成 字符串 放进 body
+        fetch('/graphql', {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    query: query,
+                    variables: variables
+                })
+            }).then(res => res.json)
+            .then(json => {
+                console.log(data);
+            });
+
+    }
+</script>
+
+</html>
